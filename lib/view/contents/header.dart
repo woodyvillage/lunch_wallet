@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:lunch_wallet/common/resource.dart';
+
 class ApplicationHeader extends StatelessWidget with PreferredSizeWidget {
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
@@ -8,7 +10,7 @@ class ApplicationHeader extends StatelessWidget with PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       centerTitle: true,
-      title: Text('ランチウォレット'),
+      title: Text(applicationName),
       // actions: [
       //   Padding(
       //     padding: const EdgeInsets.all(6.0),

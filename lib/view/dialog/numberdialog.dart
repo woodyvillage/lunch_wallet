@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class DepositDialog extends StatefulWidget {
-  DepositDialog({Key key, this.initial}) : super(key: key);
-  final int initial;
+class NumberDialog extends StatefulWidget {
+  NumberDialog({Key key, this.title, this.value}) : super(key: key);
+  final String title;
+  final int value;
 
   @override
-  _DepositDialogState createState() => _DepositDialogState();
+  _NumberDialogState createState() => _NumberDialogState();
 }
-class _DepositDialogState extends State<DepositDialog> {
-  TextEditingController _appCtrl;
+class _NumberDialogState extends State<NumberDialog> {
+  TextEditingController _appCtrl = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    if (widget.initial == null) {
-      _appCtrl = TextEditingController();
-    } else {
-      _appCtrl = TextEditingController(text: widget.initial.toString());
+    if (widget.value != null) {
+      _appCtrl = TextEditingController(text: widget.value.toString());
     }
   }
 
@@ -32,13 +31,12 @@ class _DepositDialogState extends State<DepositDialog> {
       FlatButton(
         child: Text(localizations.okButtonLabel),
         onPressed: () {
-          int _amount = int.tryParse(_appCtrl.text);
-          Navigator.pop<int>(context, _amount);
+          Navigator.pop<int>(context, int.tryParse(_appCtrl.text));
         },
       ),
     ];
     final AlertDialog dialog = AlertDialog(
-      title: Text('入金額'),
+      title: Text(widget.title),
       content: TextField(
         controller: _appCtrl,
         decoration: InputDecoration(hintText: '半角数字で入力してください'),

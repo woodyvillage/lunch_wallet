@@ -1,6 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:lunch_wallet/model/setting.dart';
+import 'package:lunch_wallet/common/resource.dart';
 
 class ApplicationPreference {
   // 所持金
@@ -11,7 +11,7 @@ class ApplicationPreference {
     // SharedPreferencesに保存されている所持金を取得
     SharedPreferences pref = await SharedPreferences.getInstance();
     _possession = pref.getInt('savings');
-    _possession = _possession ??= 0;
+    _possession ??= 0;
     print('ApplicationPreference.getPossession(): $_possession');
   }
 
@@ -27,10 +27,10 @@ class ApplicationPreference {
   }
 
   getSetting(int _index) async {
-    // SharedPreferencesに保存されている所持金を取得
+    // SharedPreferencesに保存されている設定値を取得
     SharedPreferences pref = await SharedPreferences.getInstance();
-    _value = pref.getString(settingListItem[_index][2]);
-    print('ApplicationPreference.getSetting(): ${settingListItem[_index][2]} -> $_value');
+    _value = pref.getString(settings[_index][settingColumn]);
+    print('ApplicationPreference.getSetting(): ${settings[_index][settingColumn]} -> $_value');
   }
 
   String getSettingValue() {
@@ -38,9 +38,9 @@ class ApplicationPreference {
   }
 
   setSetting(int _index, String _value) async {
-    // SharedPreferencesに保存されている所持金を更新
+    // SharedPreferencesに保存されている設定値を更新
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString(settingListItem[_index][2], _value);
-    print('ApplicationPreference.setSetting(): ${settingListItem[_index][2]} -> $_value');
+    await prefs.setString(settings[_index][settingColumn], _value);
+    print('ApplicationPreference.setSetting(): ${settings[_index][settingColumn]} -> $_value');
   }
 }

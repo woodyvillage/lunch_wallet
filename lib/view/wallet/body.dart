@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
-import 'package:lunch_wallet/view/balance/balance.dart';
+import 'package:lunch_wallet/view/wallet/balance.dart';
 import 'package:lunch_wallet/view/wallet/wallet.dart';
 
-class Body extends StatelessWidget {
+class ApplicationWallet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Column(
         children: <Widget>[
-          // 残高
+          // ウォレット
           Container(
             margin: const EdgeInsets.all(10),
-            height: 70.0,
+            height: 70,
             child: Wallet(),
           ),
           // 収支

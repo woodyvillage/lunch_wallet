@@ -1,10 +1,10 @@
-import 'dart:async';
 import 'package:rxdart/rxdart.dart';
+
 import 'package:lunch_wallet/common/table.dart';
+import 'package:lunch_wallet/dao/payment.dart';
+import 'package:lunch_wallet/dto/payment.dart';
 
 class ApplicationBloc {
-  final _appDB = ApplicationDatabase.instance;
-
   // 入金額
   final _getDepositController = BehaviorSubject<int>();
   Sink<int> get deposit => _getDepositController.sink;
@@ -18,10 +18,8 @@ class ApplicationBloc {
   Stream<int> get possession => _setPossessionController.stream;
 
   // 支払明細
-  final _setBalanceController = BehaviorSubject<List<Map<String, dynamic>>>();
-  Stream<List<Map<String, dynamic>>> get balance => _setBalanceController.stream;
-
-  List<Map<String, dynamic>> _balance;
+  final _setBalanceController = BehaviorSubject<List<PaymentDto>>();
+  Stream<List<PaymentDto>> get balance => _setBalanceController.stream;
 
   ApplicationBloc() {
     // 入金
@@ -35,9 +33,9 @@ class ApplicationBloc {
       print('ApplicationBloc._getPaymentController(_fee): $_fee');
 
       // 最新の収支リストを更新
-      _balance = await _appDB.queryAllRows();
-      _balance.forEach((row) => print(row));
-      _setBalanceController.sink.add(_balance);
+      PaymentDao _dao = PaymentDao();
+      List<PaymentDto> _dto = await _dao.selectOrderDesc(ApplicationDatabase.cId);
+      _setBalanceController.sink.add(_dto);
     });
   }
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:lunch_wallet/view/wallet/amounttext.dart';
-import 'package:lunch_wallet/view/wallet/depositbutton.dart';
+import 'package:lunch_wallet/view/wallet/walletdisplay.dart';
+import 'package:lunch_wallet/view/wallet/walletbutton.dart';
 
 class Wallet extends StatelessWidget {
   @override
@@ -12,19 +12,22 @@ class Wallet extends StatelessWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            // アクセント
             Expanded(
               flex: 1,
               child: Container(
-                decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+                decoration: BoxDecoration(color: Theme.of(context).primaryColorDark),
               ),
             ),
+            // 残高表示
             Expanded(
               flex: 40,
-              child: AmountText(),
+              child: WalletText(),
             ),
+            // 入金ボタン
             Expanded(
               flex: 20,
-              child: DepositButton(),
+              child: WalletButton(),
             ),
           ],
         ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'package:lunch_wallet/common/resource.dart';
 import 'package:lunch_wallet/view/contents/contents.dart';
 
 class ApplicationFrame extends StatelessWidget {
@@ -8,7 +9,7 @@ class ApplicationFrame extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'ランチウォレット',
+      title: applicationName,
 
       // 日本語のフォントが正しく表示される対応
       localizationsDelegates: [
