@@ -249,7 +249,7 @@ class _PaletteState extends State<Palette> {
                   _controller[catName].text == '' ? _dto.name = null : _dto.name = _controller[catName].text;
                   _controller[catNote].text == '' ? _dto.note = '' : _dto.note = _controller[catNote].text;
                   _controller[catPrice].text == '' ? _dto.price = null : _dto.price = int.parse(_controller[catPrice].text);
-                  _dto.icon = _image.path;
+                  _image == null ? _dto.icon = null : _dto.icon = _image.path;
                   var _result = await editCatalog(context, _dto);
                   if (_result == 0) {
                     context.read<CatalogNotifier>().getAllCatalog();

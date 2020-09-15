@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sticky_and_expandable_list/sticky_and_expandable_list.dart';
@@ -53,8 +54,8 @@ class _BillboardState extends State<Billboard> {
                       width: 50,
                       height: 50,
                       child: (_catalogList[sectionIndex].items[itemIndex].icon != null)
-                        ? Image.asset(
-                          _catalogList[sectionIndex].items[itemIndex].icon,
+                        ? Image.file(
+                          File(_catalogList[sectionIndex].items[itemIndex].icon),
                           fit: BoxFit.cover,
                         )
                         : Image.asset(
