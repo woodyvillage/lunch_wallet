@@ -15,7 +15,7 @@ class _BalanceState extends State<Balance> {
   ApplicationBloc _bloc;
   List<GlobalKey> _keylist = [];
 
-  @override 
+  @override
   void didChangeDependencies() {
     // 起動時の最初の一回
     super.didChangeDependencies();
@@ -25,10 +25,10 @@ class _BalanceState extends State<Balance> {
   @override
   void initState() {
     super.initState();
-    _getPreference();
+    _flush();
   }
 
-  _getPreference() async {
+  _flush() async {
     // 起動時の最初の一回
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _bloc.payment.add(0);
@@ -59,7 +59,13 @@ class _BalanceState extends State<Balance> {
                     minWidth: 5,
                     child: Icon(Icons.more_vert),
                     onPressed: () {
-                      PaymentDto _dto = PaymentDto(id: snapshot.data[index].id, name: snapshot.data[index].name, date: snapshot.data[index].date, price: snapshot.data[index].price);
+                      PaymentDto _dto = PaymentDto(
+                        id: snapshot.data[index].id,
+                        name: snapshot.data[index].name,
+                        date: snapshot.data[index].date,
+                        price: snapshot.data[index].price,
+                        mode: snapshot.data[index].mode,
+                      );
                       showPopup(context, _bloc, _keylist[index], _dto);
                     },
                   ),
@@ -67,7 +73,7 @@ class _BalanceState extends State<Balance> {
               );
             }
           );
-        }else{
+        } else {
           return ListView();
         }
       }

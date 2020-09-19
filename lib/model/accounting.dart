@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'package:lunch_wallet/common/bloc.dart';
-import 'package:lunch_wallet/common/resource.dart';
 import 'package:lunch_wallet/common/preference.dart';
 import 'package:lunch_wallet/dao/payment.dart';
 import 'package:lunch_wallet/dto/menu.dart';
@@ -11,28 +10,25 @@ import 'package:lunch_wallet/dto/payment.dart';
 import 'package:lunch_wallet/model/dialog.dart';
 import 'package:lunch_wallet/model/notification.dart';
 import 'package:lunch_wallet/model/setting.dart';
+import 'package:lunch_wallet/util/resource.dart';
+import 'package:lunch_wallet/util/table.dart';
 
 int _possession = 0;
-int _result;
-String _setting;
+dynamic _result;
 
 final ApplicationPreference _pref = ApplicationPreference();
 
 // 所持金を取得
 Future inquiry() async {
-  await _getPossession();
+  _possession = await getSettingByName('savings', _possession);
+  _possession ??= 0;
   return _possession;
-}
-
-_getPossession() async {
-  await _pref.getPossession();
-  _possession = _pref.getPossessionValue();
 }
 
 // 入金
 deposit(BuildContext _context, ApplicationBloc _bloc) async {
   // 所持金
-  await _getPossession();
+  await inquiry();
 
   // 入金処理
   _result = await showSingleDialog(context: _context, title: depositName, value: null, initial: 0);
@@ -42,7 +38,7 @@ deposit(BuildContext _context, ApplicationBloc _bloc) async {
 
     _insertFee(_result, false);
 
-    await _pref.setPossession(_possession);
+    await setSettingByName('savings', _possession);
     _bloc.deposit.add(_possession);
     _bloc.payment.add(_result);
   }
@@ -53,22 +49,18 @@ deposit(BuildContext _context, ApplicationBloc _bloc) async {
 // 支払
 payment(BuildContext _context, ApplicationBloc _bloc) async {
   // 所持金
-  await _getPossession();
+  await inquiry();
 
   // 下限金額
-  int _min = settings[minFee][settingDefault];
-  _setting = await getSetting(minFee);
-  if (_setting != null ) {
-    _min = int.parse(_setting);
-  }
+  int _min;
+  _min = await _pref.getValue(settings[minFee][settingColumn], _min);
+  _min ??= settings[minFee][settingDefault];
   print('payment:${settings[minFee][settingColumn]} -> $_min');
 
   // 上限金額
-  int _max = settings[maxFee][settingDefault];
-  _setting = await getSetting(maxFee);
-  if (_setting != null && int.parse(_setting) < _min) {
-    _max = int.parse(_setting);
-  }
+  int _max;
+  _max = await _pref.getValue(settings[maxFee][settingColumn], _min);
+  _max ??= settings[maxFee][settingDefault];
   print('payment:${settings[maxFee][settingColumn]} -> $_max');
 
   // 支払処理
@@ -82,7 +74,7 @@ payment(BuildContext _context, ApplicationBloc _bloc) async {
 
     _insertFee(_fee, true);
 
-    await _pref.setPossession(_possession);
+    await setSettingByName('savings', _possession);
     _bloc.deposit.add(_possession);
     _bloc.payment.add(_fee);
   }
@@ -99,19 +91,22 @@ int _getPayment(int _min, int _max) {
 }
 
 _insertFee(int _num, bool isPayment) async {
-  var _dateFormat = DateFormat('yyyy年MM月dd日(E) hh:mm', 'ja_JP');
+  var _dateFormat = DateFormat('yyyy年MM月dd日(E) HH:mm', 'ja_JP');
   var _date = _dateFormat.format(DateTime.now());
 
   // 明細
-  var _name;
+  String _name;
+  int _mode;
   if (isPayment) {
-    _name = await getSetting(nameFee);
+    _name = await _pref.getValue(settings[nameFee][settingColumn], settings[nameFee][settingDefault]);
     _name ??= settings[nameFee][settingDefault];
+    _mode = TableUtil.payment;
   } else {
-    _name = depositItem;
+    _name = await getSettingByIndex(nameDeposit);
+    _mode = TableUtil.deposit;
   }
 
-  PaymentDto _dto = PaymentDto(date: _date, name: _name, price: _num);
+  PaymentDto _dto = PaymentDto(date: _date, name: _name, price: _num, mode: _mode);
   PaymentDao _dao = PaymentDao();
   await _dao.insert(_dto);
 }
@@ -119,11 +114,11 @@ _insertFee(int _num, bool isPayment) async {
 // 払戻
 refund(BuildContext _context, ApplicationBloc _bloc, PaymentDto _dto) async {
   // 所持金
-  await _getPossession();
+  await inquiry();
 
   // 払戻処理
   bool action;
-  if (_dto.name == depositItem) {
+  if (_dto.mode == TableUtil.deposit) {
     _possession < _dto.price ? action = true : action = false;
     action == true ? _possession = _possession : _possession -= _dto.price;
   } else {
@@ -135,7 +130,7 @@ refund(BuildContext _context, ApplicationBloc _bloc, PaymentDto _dto) async {
     _deleteFee(_dto);
   }
 
-  await _pref.setPossession(_possession);
+  await setSettingByName('savings', _possession);
   _bloc.deposit.add(_possession);
   _bloc.payment.add(_dto.price);
 
@@ -150,34 +145,51 @@ _deleteFee(PaymentDto _dto) async {
 // 訂正
 correct(BuildContext _context, ApplicationBloc _bloc, PaymentDto _dto) async {
   // 所持金
-  await _getPossession();
+  await inquiry();
 
   // 訂正処理
   _result = await showSingleDialog(context: _context, title: _dto.name, value: _dto.price, initial: 0);
   print('_result:$_result');
   var _difference = 0;
-  if (_result != null && _result != 0) {
-    _difference = _dto.price - _result;
-    if (_difference == 0) {
-      // 変更していない
-      _result = 0;
-    } else if (_difference < 0 && _possession < _difference.abs()) {
-      // 差額が所持金より多い
-      _result = -1;
-    } else {
-      // 変更した
-      _possession += _difference;
-      _dto.price = _result;
-
-      _updateFee(_dto);
-
-      await _pref.setPossession(_possession);
-      _bloc.deposit.add(_possession);
-      _bloc.payment.add(_dto.price);
-    }
-  } else {
+  _difference = _dto.price - _result;
+  if (_difference == 0) {
     // 変更していない
     _result = 0;
+  }
+  if (_dto.mode == TableUtil.deposit) {
+    if (_difference < 0) {
+      // 入金額を増やす
+      _possession += _difference.abs();
+      _dto.price = _result;
+    } else if (_difference > 0 && _possession < _difference.abs()) {
+      // 入金額を減らす、差額が所持金より多い
+      _result = -1;
+    } else {
+      // 入金額を減らす
+      _possession -= _difference;
+      _dto.price = _result;
+    }
+  } else {
+    if (_difference > 0) {
+      // 支払額を減らす
+      _possession += _difference.abs();
+      _dto.price = _result;
+    } else if (_difference < 0 && _possession < _difference.abs()) {
+      // 支払額を増やす、差額が所持金より多い
+      _result = -1;
+    } else {
+      // 支払額を増やす
+      _possession += _difference;
+      _dto.price = _result;
+    }
+  }
+
+  if (_result != null && _result > 0) {
+    _updateFee(_dto);
+
+    await setSettingByName('savings', _possession);
+    _bloc.deposit.add(_possession);
+    _bloc.payment.add(_dto.price);
   }
 
   correctNotification(_context, _result);
@@ -191,7 +203,7 @@ _updateFee(PaymentDto _dto) async {
 // カタログ支払
 catalogPayment(BuildContext _context, ApplicationBloc _bloc, MenuDto _dto) async {
   // 所持金
-  await _getPossession();
+  await inquiry();
 
   // 支払処理
   int _fee = _dto.price;
@@ -202,9 +214,9 @@ catalogPayment(BuildContext _context, ApplicationBloc _bloc, MenuDto _dto) async
   } else {
     _possession -= _fee;
 
-    _insertDto(_dto);
+    _insertByMenuDto(_dto);
 
-    await _pref.setPossession(_possession);
+    await setSettingByName('savings', _possession);
     _bloc.deposit.add(_possession);
     _bloc.payment.add(_fee);
   }
@@ -212,11 +224,42 @@ catalogPayment(BuildContext _context, ApplicationBloc _bloc, MenuDto _dto) async
   receiptNotification(_context, _fee);
 }
 
-_insertDto(MenuDto dto) async {
+_insertByMenuDto(MenuDto dto) async {
   var _dateFormat = DateFormat('yyyy年MM月dd日(E) hh:mm', 'ja_JP');
   var _date = _dateFormat.format(DateTime.now());
 
-  PaymentDto _dto = PaymentDto(date: _date, shop: dto.shop, name: dto.name, note: dto.note, price: dto.price);
+  PaymentDto _dto = PaymentDto(date: _date, shop: dto.shop, name: dto.name, note: dto.note, price: dto.price, mode: TableUtil.catalog);
+  PaymentDao _dao = PaymentDao();
+  await _dao.insert(_dto);
+}
+
+// マニュアル支払
+Future manualPayment(ApplicationBloc _bloc, PaymentDto _dto) async {
+  // 所持金
+  await inquiry();
+
+  // 支払処理
+  int _fee = _dto.price;
+  print('manualPayment:$_fee');
+
+  if (_possession < _fee) {
+    _fee = 0;
+  } else {
+    _possession -= _fee;
+
+    _insertByPaymentDto(_dto);
+
+    await setSettingByName('savings', _possession);
+    _bloc.deposit.add(_possession);
+    _bloc.payment.add(_fee);
+  }
+}
+
+_insertByPaymentDto(PaymentDto dto) async {
+  var _dateFormat = DateFormat('yyyy年MM月dd日(E) hh:mm', 'ja_JP');
+  var _date = _dateFormat.format(DateTime.now());
+
+  PaymentDto _dto = PaymentDto(date: _date, shop: dto.shop, name: dto.name, note: dto.note, price: dto.price, mode: TableUtil.payment);
   PaymentDao _dao = PaymentDao();
   await _dao.insert(_dto);
 }

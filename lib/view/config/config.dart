@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import 'package:lunch_wallet/common/bloc.dart';
-import 'package:lunch_wallet/common/resource.dart';
-import 'package:lunch_wallet/model/setting.dart';
+import 'package:lunch_wallet/util/resource.dart';
+import 'package:lunch_wallet/view/config/switchconfig.dart';
+import 'package:lunch_wallet/view/config/textconfig.dart';
 
 class Config extends StatelessWidget {
   Config({Key key, this.index}) : super(key: key);
@@ -11,8 +10,6 @@ class Config extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _appBloc = Provider.of<ApplicationBloc>(context);
-
     if (settings[index][settingCaption]) {
       return Container(
         color: Theme.of(context).dividerColor,
@@ -22,33 +19,10 @@ class Config extends StatelessWidget {
         ),
       );
     } else {
-      if (settings[index][settingDetail] == null) {
-        // noteがない形式
-        return ListTile(
-          title: Text(settings[index][settingTitle]),
-          trailing: Icon(Icons.chevron_right),
-          onTap: () {
-            if (settings[index][settingMinimum] == null || settings[index][settingMaximum] == null) {
-              editSetting(context, _appBloc, index);
-            } else {
-              editRangeSetting(context, _appBloc, index);
-            }
-          }
-        );
+      if (settings[index][settingDefault] is bool) {
+        return SwitchConfig(index: index);
       } else {
-        // noteがある形式
-        return ListTile(
-          title: Text(settings[index][settingTitle]),
-          subtitle: Text(settings[index][settingDetail]),
-          trailing: Icon(Icons.chevron_right),
-          onTap: () {
-            if (settings[index][settingMinimum] == null || settings[index][settingMaximum] == null) {
-              editSetting(context, _appBloc, index);
-            } else {
-              editRangeSetting(context, _appBloc, index);
-            }
-          }
-        );
+        return TextConfig(index: index);
       }
     }
   }

@@ -7,8 +7,8 @@ import 'package:lunch_wallet/view/dialog/textdialog.dart';
 Future showSingleDialog({
   @required BuildContext context,
   @required String title,
-  Object value,
-  Object initial,
+  dynamic value,
+  dynamic initial,
   TransitionBuilder builder,
 }) {
   Widget dialog;

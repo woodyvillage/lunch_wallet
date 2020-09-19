@@ -1,31 +1,29 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
-
-import 'package:lunch_wallet/common/notifier.dart';
-import 'package:lunch_wallet/common/resource.dart';
-import 'package:lunch_wallet/dto/menu.dart';
-import 'package:lunch_wallet/model/setting.dart';
-
 import 'package:provider/provider.dart';
 
-class Palette extends StatefulWidget {
+import 'package:lunch_wallet/common/bloc.dart';
+import 'package:lunch_wallet/dto/payment.dart';
+import 'package:lunch_wallet/model/accounting.dart';
+import 'package:lunch_wallet/util/resource.dart';
+
+class PaymentPalette extends StatefulWidget {
   @override
-  _PaletteState createState() => _PaletteState();
+  _PaymentPaletteState createState() => _PaymentPaletteState();
 }
 
-class _PaletteState extends State<Palette> {
+class _PaymentPaletteState extends State<PaymentPalette> {
   final _focus = [FocusNode(), FocusNode(), FocusNode(), FocusNode()];
   final _controller = [TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController()];
   var errorText = '';
   BuildContext _context;
-  File _image;
+  ApplicationBloc _bloc;
 
-  @override 
+  @override
   void didChangeDependencies() {
     // 起動時の最初の一回
     super.didChangeDependencies();
+    _bloc = Provider.of<ApplicationBloc>(context);
     _context = context;
   }
 
@@ -38,12 +36,6 @@ class _PaletteState extends State<Palette> {
     _controller[catPrice].text = '';
   }
 
-  Future _insertImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      _image = image;
-    });
-  }
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -106,29 +98,46 @@ class _PaletteState extends State<Palette> {
                 ),
               ),
               ListTile(
-                leading: Stack(
-                  children: <Widget> [
-                    Container(
-                      width: 60,
-                      height: 60,
-                      child: (_image != null)
-                        ? Image.file(
-                          _image,
-                          fit: BoxFit.cover,
-                        )
-                        : Image.asset(
-                          'images/noimage.png',
-                          fit: BoxFit.cover,
+                leading: CircleAvatar(
+                  radius: 30,
+                  child: Container(
+                    height: 48,
+                    padding: EdgeInsets.only(left: 6, right: 6),
+                    alignment: Alignment.center,
+                    child: TextFormField(
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                      focusNode: _focus[catPrice],
+                      textAlign : TextAlign.center,
+                      controller: _controller[catPrice],
+                      keyboardType: TextInputType.numberWithOptions(signed:false),
+                      textInputAction: TextInputAction.next,
+                      decoration: InputDecoration(
+                        isCollapsed : true,
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
                         ),
+                        errorBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.red),
+                        ),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.transparent),
+                        ),
+                        hintText: catalogs[catPrice][settingDetail],
+                        hintStyle:  TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                      ),
+                      inputFormatters: <TextInputFormatter> [
+                        WhitelistingTextInputFormatter.digitsOnly,
+                      ],
+                      onFieldSubmitted: (v){
+                        FocusScope.of(context).requestFocus(_focus[catShop]);
+                      },
                     ),
-                    MaterialButton(
-                      minWidth: 60,
-                      height: 60,
-                      color: Colors.white30,
-                      onPressed: () => _insertImage(),
-                      child: Text('+'),
-                    )
-                  ],
+                  ),
                 ),
                 title: TextFormField(
                   style: TextStyle(
@@ -188,47 +197,6 @@ class _PaletteState extends State<Palette> {
                     FocusScope.of(context).requestFocus(_focus[catPrice]);
                   },
                 ),
-                trailing: CircleAvatar(
-                  radius: 30,
-                  child: Container(
-                    height: 48,
-                    padding: EdgeInsets.only(left: 6, right: 6),
-                    alignment: Alignment.center,
-                      child: TextFormField(
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                        focusNode: _focus[catPrice],
-                        textAlign : TextAlign.center,
-                        controller: _controller[catPrice],
-                        keyboardType: TextInputType.numberWithOptions(signed:false),
-                        textInputAction: TextInputAction.next,
-                        decoration: InputDecoration(
-                          isCollapsed : true,
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                          errorBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.red),
-                          ),
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.transparent),
-                          ),
-                          hintText: catalogs[catPrice][settingDetail],
-                          hintStyle:  TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                          ),
-                        ),
-                        inputFormatters: <TextInputFormatter> [
-                          WhitelistingTextInputFormatter.digitsOnly,
-                        ],
-                        onFieldSubmitted: (v){
-                          FocusScope.of(context).requestFocus(_focus[catShop]);
-                        },
-                      ),
-                    ),
-                  ),
               ),
             ],
           ),
@@ -244,26 +212,17 @@ class _PaletteState extends State<Palette> {
                 icon: buttons[btnReg][settingIcon],
                 label: buttons[btnReg][settingTitle],
                 onPressed: () async {
-                  MenuDto _dto = MenuDto();
+                  PaymentDto _dto = PaymentDto();
                   _controller[catShop].text == '' ? _dto.shop = null : _dto.shop = _controller[catShop].text;
                   _controller[catName].text == '' ? _dto.name = null : _dto.name = _controller[catName].text;
                   _controller[catNote].text == '' ? _dto.note = '' : _dto.note = _controller[catNote].text;
                   _controller[catPrice].text == '' ? _dto.price = null : _dto.price = int.parse(_controller[catPrice].text);
-                  _image == null ? _dto.icon = null : _dto.icon = _image.path;
-                  var _result = await editCatalog(context, _dto);
-                  if (_result == 0) {
-                    context.read<CatalogNotifier>().getAllCatalog();
+                  if (_dto.check()) {
+                    await manualPayment(_bloc, _dto);
                     Navigator.pop(_context);
                   } else {
                     setState(() {
-                      switch(_result) {
-                        case 1:
-                          errorText = '*印の必須項目を入力してください';
-                          break;
-                        case 2:
-                          errorText = 'すでに同じメニューが登録されています';
-                          break;
-                      }
+                      errorText = '*印の必須項目を入力してください';
                     });
                   }
                 },

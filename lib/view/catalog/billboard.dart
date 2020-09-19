@@ -2,12 +2,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sticky_and_expandable_list/sticky_and_expandable_list.dart';
+import 'package:slide_popup_dialog/slide_popup_dialog.dart' as slideDialog;
 
 import 'package:lunch_wallet/common/bloc.dart';
-import 'package:lunch_wallet/common/notifier.dart';
+import 'package:lunch_wallet/common/catalog_notifier.dart';
 import 'package:lunch_wallet/dto/catalog.dart';
 import 'package:lunch_wallet/dto/menu.dart';
 import 'package:lunch_wallet/model/accounting.dart';
+import 'package:lunch_wallet/view/dialog/catalogpalette.dart';
 
 class Billboard extends StatefulWidget {
   @override
@@ -18,7 +20,7 @@ class _BillboardState extends State<Billboard> {
   ApplicationBloc _bloc;
   List<CatalogDto> _catalogList;
 
-  @override 
+  @override
   void didChangeDependencies() {
     // 起動時の最初の一回
     super.didChangeDependencies();
@@ -69,6 +71,22 @@ class _BillboardState extends State<Billboard> {
                       radius: 30,
                       child: Text(_catalogList[sectionIndex].items[itemIndex].price.toString()),
                     ),
+                    onTap: () async {
+                      // 登録画面
+                      slideDialog.showSlideDialog(
+                        context: context,
+                        child: CatalogPalette(
+                          id: _catalogList[sectionIndex].items[itemIndex].id,
+                          shop: _catalogList[sectionIndex].items[itemIndex].shop,
+                          name: _catalogList[sectionIndex].items[itemIndex].name,
+                          note: _catalogList[sectionIndex].items[itemIndex].note,
+                          price: _catalogList[sectionIndex].items[itemIndex].price,
+                          icon: _catalogList[sectionIndex].items[itemIndex].icon,
+                        ),
+                        barrierColor: Colors.black.withOpacity(0.7),
+                        backgroundColor: Theme.of(context).canvasColor,
+                      );
+                    },
                     onLongPress: () async {
                       await catalogPayment(context, _bloc, _catalogList[sectionIndex].items[itemIndex]);
                     }

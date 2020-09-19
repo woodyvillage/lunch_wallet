@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:lunch_wallet/common/bloc.dart';
-import 'package:lunch_wallet/common/resource.dart';
 import 'package:lunch_wallet/model/accounting.dart';
+import 'package:lunch_wallet/util/resource.dart';
 
 class WalletText extends StatefulWidget {
   @override
@@ -13,7 +13,7 @@ class WalletText extends StatefulWidget {
 class _WalletTextState extends State<WalletText> {
   ApplicationBloc _bloc;
 
-  @override 
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _bloc = Provider.of<ApplicationBloc>(context);

@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 
-import 'package:lunch_wallet/common/resource.dart';
+import 'package:lunch_wallet/util/table.dart';
 
 Widget circleAvatarItem({
   @required context,
   @required data,
 }) {
-  if (data.name == depositItem) {
-    return CircleAvatar(
-      radius: 30,
-      child: Text(data.price.toString()),
-    );
-  } else if (data.shop == null) {
+  if (data.mode == TableUtil.payment) {
+    // 白地
     return CircleAvatar(
       radius: 30,
       child: CircleAvatar(
@@ -20,7 +16,8 @@ Widget circleAvatarItem({
         child: Text(data.price.toString()),
       ),
     );
-  } else {
+  } else if (data.mode == TableUtil.catalog) {
+    // 薄青地
     return CircleAvatar(
       radius: 30,
       child: CircleAvatar(
@@ -28,6 +25,12 @@ Widget circleAvatarItem({
         radius: 25,
         child: Text(data.price.toString()),
       ),
+    );
+  } else {
+    // 青地
+    return CircleAvatar(
+      radius: 30,
+      child: Text(data.price.toString()),
     );
   }
 }

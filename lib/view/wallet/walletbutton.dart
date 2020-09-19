@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:lunch_wallet/common/bloc.dart';
-import 'package:lunch_wallet/common/resource.dart';
 import 'package:lunch_wallet/model/accounting.dart';
+import 'package:lunch_wallet/util/resource.dart';
 
 class WalletButton extends StatelessWidget {
   @override

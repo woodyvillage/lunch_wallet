@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:popup_menu/popup_menu.dart';
 
 import 'package:lunch_wallet/common/bloc.dart';
-import 'package:lunch_wallet/common/resource.dart';
 import 'package:lunch_wallet/dto/payment.dart';
 import 'package:lunch_wallet/model/accounting.dart';
+import 'package:lunch_wallet/util/resource.dart';
 
 void showPopup(BuildContext _context, ApplicationBloc _bloc, GlobalKey _key, PaymentDto _dto) {
   PopupMenu _menu = PopupMenu(

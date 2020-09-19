@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:lunch_wallet/common/resource.dart';
+import 'package:lunch_wallet/util/resource.dart';
 import 'package:lunch_wallet/view/config/config.dart';
 
 class ApplicationSetting extends StatelessWidget {

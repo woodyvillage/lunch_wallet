@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hidden_drawer_menu/hidden_drawer_menu.dart';
 
-import 'package:lunch_wallet/common/resource.dart';
+import 'package:lunch_wallet/util/resource.dart';
 import 'package:lunch_wallet/view/contents/button.dart';
 
 class ApplicationContents extends StatefulWidget {

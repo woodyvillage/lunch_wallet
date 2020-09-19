@@ -1,8 +1,8 @@
 import 'package:rxdart/rxdart.dart';
 
-import 'package:lunch_wallet/common/table.dart';
 import 'package:lunch_wallet/dao/payment.dart';
 import 'package:lunch_wallet/dto/payment.dart';
+import 'package:lunch_wallet/util/table.dart';
 
 class ApplicationBloc {
   // 入金額
@@ -34,7 +34,7 @@ class ApplicationBloc {
 
       // 最新の収支リストを更新
       PaymentDao _dao = PaymentDao();
-      List<PaymentDto> _dto = await _dao.selectOrderDesc(ApplicationDatabase.cId);
+      List<PaymentDto> _dto = await _dao.selectOrderDesc(TableUtil.cId);
       _setBalanceController.sink.add(_dto);
     });
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import 'package:lunch_wallet/common/resource.dart';
+import 'package:lunch_wallet/util/resource.dart';
 import 'package:lunch_wallet/view/contents/contents.dart';
 
 class ApplicationFrame extends StatelessWidget {

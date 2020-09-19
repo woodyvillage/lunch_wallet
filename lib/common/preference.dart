@@ -1,46 +1,32 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:lunch_wallet/common/resource.dart';
-
 class ApplicationPreference {
-  // 所持金
-  int _possession = 0;
-  String _value;
+  Future getValue(String _key, dynamic _value) async {
+    SharedPreferences _pref = await SharedPreferences.getInstance();
 
-  getPossession() async {
-    // SharedPreferencesに保存されている所持金を取得
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    _possession = pref.getInt('savings');
-    _possession ??= 0;
-    print('ApplicationPreference.getPossession(): $_possession');
-  }
+    if (_value is bool){
+      _value = _pref.getBool(_key);
+    } else if (_value is int) {
+      _value = _pref.getInt(_key);
+    } else if (_value is String) {
+      _value = _pref.getString(_key);
+    }
 
-  int getPossessionValue() {
-    return _possession;
-  }
-
-  setPossession(int _value) async {
-    // SharedPreferencesに保存されている所持金を更新
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('savings', _value);
-    print('ApplicationPreference.setPossession(): $_value');
-  }
-
-  getSetting(int _index) async {
-    // SharedPreferencesに保存されている設定値を取得
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    _value = pref.getString(settings[_index][settingColumn]);
-    print('ApplicationPreference.getSetting(): ${settings[_index][settingColumn]} -> $_value');
-  }
-
-  String getSettingValue() {
+    print('ApplicationPreference.getValue(): $_key -> $_value');
     return _value;
   }
 
-  setSetting(int _index, String _value) async {
-    // SharedPreferencesに保存されている設定値を更新
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString(settings[_index][settingColumn], _value);
-    print('ApplicationPreference.setSetting(): ${settings[_index][settingColumn]} -> $_value');
+  setValue(String _key, dynamic _value) async {
+    SharedPreferences _pref = await SharedPreferences.getInstance();
+
+    if (_value is bool){
+      await _pref.setBool(_key, _value);
+    } else if (_value is int) {
+      await _pref.setInt(_key, _value);
+    } else if (_value is String) {
+      await _pref.setString(_key, _value);
+    }
+
+    print('ApplicationPreference.setValue(): $_key -> $_value');
   }
 }

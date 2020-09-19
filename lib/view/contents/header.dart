@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:lunch_wallet/common/resource.dart';
+import 'package:lunch_wallet/util/resource.dart';
 
 class ApplicationHeader extends StatelessWidget with PreferredSizeWidget {
   @override

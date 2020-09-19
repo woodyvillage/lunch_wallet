@@ -8,7 +8,6 @@ import 'package:lunch_wallet/view/wallet/body.dart';
 final applicationName = 'ランチウォレット';
 final walletPossession = 'ウォレット残高';
 final depositName = '入金額';
-final depositItem = 'ウォレットに入金';
 
 // 要素定義
 final settingTitle = 0;
@@ -21,6 +20,7 @@ final settingFunction = 3;
 final settingCaption = 4;
 final settingMinimum = 5;
 final settingMaximum = 6;
+final settingParent = 7;
 
 // drawer内に表示するメニュー
 final contents = [
@@ -49,14 +49,20 @@ final btnCan = 6;
 
 // setting画面内に表示する項目
 final settings = [
-  ['自動支払機能', Icons.payment , '', '', true],
-  ['最低金額', '自動支払機能での最低支払額を設定', 'minFee', 700, false, 0, 2],
-  ['最高金額', '自動支払機能での最高支払額を設定', 'maxFee', 900, false, 1, 0],
-  ['明細名', '自動支払機能での明細の件名を設定', 'nameFee', 'ランチ代', false, null, null],
+  ['入金', '' , '', '', true, null, null, null],
+  ['明細名', null, 'nameDeposit', 'ウォレットに入金', false, null, null, null],
+  ['支払', '' , '', '', true, null, null, null],
+  ['自動支払', '支払額を自動計算します', 'isAuto', true , false, null, null, null],
+  ['自動支払機能', '' , '', '', true, null, null, null],
+  ['最低金額', '自動支払機能での最低支払額', 'minFee', 700, false, 0, 6, 3],
+  ['最高金額', '自動支払機能での最高支払額', 'maxFee', 900, false, 5, 0, 3],
+  ['明細名', null, 'nameFee', 'ランチ代', false, null, null, 3],
 ];
-final minFee = 1;
-final maxFee = 2;
-final nameFee = 3;
+final nameDeposit = 1;
+final isAuto = 3;
+final minFee = 5;
+final maxFee = 6;
+final nameFee = 7;
 
 // pallet画面内に表示する項目
 final catalogs = [
