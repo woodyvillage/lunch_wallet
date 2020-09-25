@@ -33,11 +33,11 @@ class ApplicationDatabase {
 
   Future _onUpgrade(Database _db, int _previous, int _current) async {
     print('update database version $_previous to $_current');
-    await _definition(_db, _previous, _current);
+    await _definition(_db, _previous + 1, _current);
   }
 
   _definition(Database _db, int _previous, int _current) async {
-    for (var i = _previous; i <= TableUtil.databaseVersion; i++) {
+    for (var i = _previous; i <= _current; i++) {
       var _queries = TableUtil.ddlScripts[i.toString()];
       for (String _query in _queries) {
         print(_query);
