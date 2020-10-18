@@ -34,63 +34,84 @@ class _BillboardState extends State<Billboard> {
   }
 
   _getCatalog() async {
-    _catalogList = context.read<CatalogNotifier>().getAllCatalog();
-    setState(() {});
+    setState(() {
+      context.read<CatalogNotifier>().getAllCatalog();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    _catalogList = context.select((CatalogNotifier counter) => counter.catalogList);
+    _catalogList =
+        context.select((CatalogNotifier counter) => counter.catalogList);
     if (_catalogList != null) {
       return SafeArea(
         child: CustomScrollView(
           slivers: <Widget>[
             SliverExpandableList(
               builder: SliverExpandableChildDelegate<MenuDto, CatalogDto>(
-              sectionList: _catalogList,
+                sectionList: _catalogList,
                 headerBuilder: _buildHeader,
-                addAutomaticKeepAlives : true,
+                addAutomaticKeepAlives: true,
                 itemBuilder: (context, sectionIndex, itemIndex, index) {
                   return ListTile(
-                    leading: Container(
-                      width: 50,
-                      height: 50,
-                      child: (_catalogList[sectionIndex].items[itemIndex].icon != null)
-                        ? Image.file(
-                          File(_catalogList[sectionIndex].items[itemIndex].icon),
-                          fit: BoxFit.cover,
-                        )
-                        : Image.asset(
-                          'images/noimage.png',
-                          fit: BoxFit.cover,
-                        ),
-                    ),
-                    title: Text(_catalogList[sectionIndex].items[itemIndex].name),
-                    subtitle: Text(_catalogList[sectionIndex].items[itemIndex].note),
-                    trailing: CircleAvatar(
-                      radius: 30,
-                      child: Text(_catalogList[sectionIndex].items[itemIndex].price.toString()),
-                    ),
-                    onTap: () async {
-                      // 登録画面
-                      slideDialog.showSlideDialog(
-                        context: context,
-                        child: CatalogPalette(
-                          id: _catalogList[sectionIndex].items[itemIndex].id,
-                          shop: _catalogList[sectionIndex].items[itemIndex].shop,
-                          name: _catalogList[sectionIndex].items[itemIndex].name,
-                          note: _catalogList[sectionIndex].items[itemIndex].note,
-                          price: _catalogList[sectionIndex].items[itemIndex].price,
-                          icon: _catalogList[sectionIndex].items[itemIndex].icon,
-                        ),
-                        barrierColor: Colors.black.withOpacity(0.7),
-                        backgroundColor: Theme.of(context).canvasColor,
-                      );
-                    },
-                    onLongPress: () async {
-                      await catalogPayment(context, _bloc, _catalogList[sectionIndex].items[itemIndex]);
-                    }
-                  );
+                      leading: Container(
+                        width: 50,
+                        height: 50,
+                        child:
+                            (_catalogList[sectionIndex].items[itemIndex].icon !=
+                                    null)
+                                ? Image.file(
+                                    File(_catalogList[sectionIndex]
+                                        .items[itemIndex]
+                                        .icon),
+                                    fit: BoxFit.cover,
+                                  )
+                                : Image.asset(
+                                    'images/noimage.png',
+                                    fit: BoxFit.cover,
+                                  ),
+                      ),
+                      title: Text(
+                          _catalogList[sectionIndex].items[itemIndex].name),
+                      subtitle: Text(
+                          _catalogList[sectionIndex].items[itemIndex].note),
+                      trailing: CircleAvatar(
+                        radius: 30,
+                        child: Text(_catalogList[sectionIndex]
+                            .items[itemIndex]
+                            .price
+                            .toString()),
+                      ),
+                      onTap: () async {
+                        // 登録画面
+                        slideDialog.showSlideDialog(
+                          context: context,
+                          child: CatalogPalette(
+                            id: _catalogList[sectionIndex].items[itemIndex].id,
+                            shop: _catalogList[sectionIndex]
+                                .items[itemIndex]
+                                .shop,
+                            name: _catalogList[sectionIndex]
+                                .items[itemIndex]
+                                .name,
+                            note: _catalogList[sectionIndex]
+                                .items[itemIndex]
+                                .note,
+                            price: _catalogList[sectionIndex]
+                                .items[itemIndex]
+                                .price,
+                            icon: _catalogList[sectionIndex]
+                                .items[itemIndex]
+                                .icon,
+                          ),
+                          barrierColor: Colors.black.withOpacity(0.7),
+                          backgroundColor: Theme.of(context).canvasColor,
+                        );
+                      },
+                      onLongPress: () async {
+                        await catalogPayment(context, _bloc,
+                            _catalogList[sectionIndex].items[itemIndex]);
+                      });
                 },
               ),
             ),
