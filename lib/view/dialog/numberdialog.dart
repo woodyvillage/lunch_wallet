@@ -9,6 +9,7 @@ class NumberDialog extends StatefulWidget {
   @override
   _NumberDialogState createState() => _NumberDialogState();
 }
+
 class _NumberDialogState extends State<NumberDialog> {
   TextEditingController _appCtrl = TextEditingController();
 
@@ -42,8 +43,8 @@ class _NumberDialogState extends State<NumberDialog> {
         decoration: InputDecoration(hintText: '半角数字で入力してください'),
         autofocus: true,
         keyboardType: TextInputType.number,
-        inputFormatters: <TextInputFormatter> [
-          WhitelistingTextInputFormatter.digitsOnly,
+        inputFormatters: <TextInputFormatter>[
+          FilteringTextInputFormatter.digitsOnly,
         ],
       ),
       actions: actions,

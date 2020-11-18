@@ -14,7 +14,12 @@ class PaymentPalette extends StatefulWidget {
 
 class _PaymentPaletteState extends State<PaymentPalette> {
   final _focus = [FocusNode(), FocusNode(), FocusNode(), FocusNode()];
-  final _controller = [TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController()];
+  final _controller = [
+    TextEditingController(),
+    TextEditingController(),
+    TextEditingController(),
+    TextEditingController()
+  ];
   var errorText = '';
   BuildContext _context;
   ApplicationBloc _bloc;
@@ -39,10 +44,10 @@ class _PaymentPaletteState extends State<PaymentPalette> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: <Widget> [
+      children: <Widget>[
         Card(
           child: Column(
-            children: <Widget> [
+            children: <Widget>[
               Container(
                 color: Theme.of(context).canvasColor,
                 height: 20,
@@ -53,7 +58,7 @@ class _PaymentPaletteState extends State<PaymentPalette> {
                   style: TextStyle(
                     color: Theme.of(context).errorColor,
                     fontWeight: FontWeight.w500,
-                      fontSize: 14,
+                    fontSize: 14,
                   ),
                 ),
               ),
@@ -73,7 +78,7 @@ class _PaymentPaletteState extends State<PaymentPalette> {
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
-                    isCollapsed : true,
+                    isCollapsed: true,
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.white),
                     ),
@@ -92,7 +97,7 @@ class _PaymentPaletteState extends State<PaymentPalette> {
                   validator: (String value) {
                     return value.isEmpty ? '必須入力です' : null;
                   },
-                  onFieldSubmitted: (v){
+                  onFieldSubmitted: (v) {
                     FocusScope.of(context).requestFocus(_focus[catName]);
                   },
                 ),
@@ -109,12 +114,13 @@ class _PaymentPaletteState extends State<PaymentPalette> {
                         color: Colors.white,
                       ),
                       focusNode: _focus[catPrice],
-                      textAlign : TextAlign.center,
+                      textAlign: TextAlign.center,
                       controller: _controller[catPrice],
-                      keyboardType: TextInputType.numberWithOptions(signed:false),
+                      keyboardType:
+                          TextInputType.numberWithOptions(signed: false),
                       textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
-                        isCollapsed : true,
+                        isCollapsed: true,
                         focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
                         ),
@@ -125,15 +131,15 @@ class _PaymentPaletteState extends State<PaymentPalette> {
                           borderSide: BorderSide(color: Colors.transparent),
                         ),
                         hintText: catalogs[catPrice][settingDetail],
-                        hintStyle:  TextStyle(
+                        hintStyle: TextStyle(
                           color: Colors.white,
                           fontSize: 14,
                         ),
                       ),
-                      inputFormatters: <TextInputFormatter> [
-                        WhitelistingTextInputFormatter.digitsOnly,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly,
                       ],
-                      onFieldSubmitted: (v){
+                      onFieldSubmitted: (v) {
                         FocusScope.of(context).requestFocus(_focus[catShop]);
                       },
                     ),
@@ -149,9 +155,10 @@ class _PaymentPaletteState extends State<PaymentPalette> {
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
-                    isCollapsed : true,
+                    isCollapsed: true,
                     focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).cursorColor),
+                      borderSide:
+                          BorderSide(color: Theme.of(context).cursorColor),
                     ),
                     errorBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.red),
@@ -165,7 +172,7 @@ class _PaymentPaletteState extends State<PaymentPalette> {
                       fontSize: 16,
                     ),
                   ),
-                  onFieldSubmitted: (v){
+                  onFieldSubmitted: (v) {
                     FocusScope.of(context).requestFocus(_focus[catNote]);
                   },
                 ),
@@ -180,9 +187,10 @@ class _PaymentPaletteState extends State<PaymentPalette> {
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
-                    isCollapsed : true,
+                    isCollapsed: true,
                     focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).cursorColor),
+                      borderSide:
+                          BorderSide(color: Theme.of(context).cursorColor),
                     ),
                     enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.transparent),
@@ -193,7 +201,7 @@ class _PaymentPaletteState extends State<PaymentPalette> {
                       fontSize: 14,
                     ),
                   ),
-                  onFieldSubmitted: (v){
+                  onFieldSubmitted: (v) {
                     FocusScope.of(context).requestFocus(_focus[catPrice]);
                   },
                 ),
@@ -213,10 +221,18 @@ class _PaymentPaletteState extends State<PaymentPalette> {
                 label: buttons[btnReg][settingTitle],
                 onPressed: () async {
                   PaymentDto _dto = PaymentDto();
-                  _controller[catShop].text == '' ? _dto.shop = null : _dto.shop = _controller[catShop].text;
-                  _controller[catName].text == '' ? _dto.name = null : _dto.name = _controller[catName].text;
-                  _controller[catNote].text == '' ? _dto.note = '' : _dto.note = _controller[catNote].text;
-                  _controller[catPrice].text == '' ? _dto.price = null : _dto.price = int.parse(_controller[catPrice].text);
+                  _controller[catShop].text == ''
+                      ? _dto.shop = null
+                      : _dto.shop = _controller[catShop].text;
+                  _controller[catName].text == ''
+                      ? _dto.name = null
+                      : _dto.name = _controller[catName].text;
+                  _controller[catNote].text == ''
+                      ? _dto.note = ''
+                      : _dto.note = _controller[catNote].text;
+                  _controller[catPrice].text == ''
+                      ? _dto.price = null
+                      : _dto.price = int.parse(_controller[catPrice].text);
                   if (_dto.check()) {
                     await manualPayment(_bloc, _dto);
                     Navigator.pop(_context);

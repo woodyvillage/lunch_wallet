@@ -10,7 +10,15 @@ import 'package:lunch_wallet/model/setting.dart';
 import 'package:lunch_wallet/util/resource.dart';
 
 class CatalogPalette extends StatefulWidget {
-  CatalogPalette({Key key, this.id, this.shop, this.name, this.note, this.price, this.icon}) : super(key: key);
+  CatalogPalette(
+      {Key key,
+      this.id,
+      this.shop,
+      this.name,
+      this.note,
+      this.price,
+      this.icon})
+      : super(key: key);
   final int id;
   final String shop;
   final String name;
@@ -24,7 +32,12 @@ class CatalogPalette extends StatefulWidget {
 
 class _CatalogPaletteState extends State<CatalogPalette> {
   final _focus = [FocusNode(), FocusNode(), FocusNode(), FocusNode()];
-  final _controller = [TextEditingController(), TextEditingController(), TextEditingController(), TextEditingController()];
+  final _controller = [
+    TextEditingController(),
+    TextEditingController(),
+    TextEditingController(),
+    TextEditingController()
+  ];
   var errorText = '';
   BuildContext _context;
   File _image;
@@ -39,10 +52,18 @@ class _CatalogPaletteState extends State<CatalogPalette> {
   @override
   void initState() {
     super.initState();
-    widget.shop == null ? _controller[catShop].text = '' : _controller[catShop].text = widget.shop;
-    widget.name == null ? _controller[catName].text = '' : _controller[catName].text = widget.name;
-    widget.note == null ? _controller[catNote].text = '' : _controller[catNote].text = widget.note;
-    widget.price == null ? _controller[catPrice].text = '' : _controller[catPrice].text = widget.price.toString();
+    widget.shop == null
+        ? _controller[catShop].text = ''
+        : _controller[catShop].text = widget.shop;
+    widget.name == null
+        ? _controller[catName].text = ''
+        : _controller[catName].text = widget.name;
+    widget.note == null
+        ? _controller[catNote].text = ''
+        : _controller[catNote].text = widget.note;
+    widget.price == null
+        ? _controller[catPrice].text = ''
+        : _controller[catPrice].text = widget.price.toString();
     widget.icon == null ? _image = null : _image = File(widget.icon);
   }
 
@@ -56,10 +77,10 @@ class _CatalogPaletteState extends State<CatalogPalette> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: <Widget> [
+      children: <Widget>[
         Card(
           child: Column(
-            children: <Widget> [
+            children: <Widget>[
               Container(
                 color: Theme.of(context).canvasColor,
                 height: 20,
@@ -70,7 +91,7 @@ class _CatalogPaletteState extends State<CatalogPalette> {
                   style: TextStyle(
                     color: Theme.of(context).errorColor,
                     fontWeight: FontWeight.w500,
-                      fontSize: 14,
+                    fontSize: 14,
                   ),
                 ),
               ),
@@ -90,7 +111,7 @@ class _CatalogPaletteState extends State<CatalogPalette> {
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
-                    isCollapsed : true,
+                    isCollapsed: true,
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.white),
                     ),
@@ -109,26 +130,26 @@ class _CatalogPaletteState extends State<CatalogPalette> {
                   validator: (String value) {
                     return value.isEmpty ? '必須入力です' : null;
                   },
-                  onFieldSubmitted: (v){
+                  onFieldSubmitted: (v) {
                     FocusScope.of(context).requestFocus(_focus[catName]);
                   },
                 ),
               ),
               ListTile(
                 leading: Stack(
-                  children: <Widget> [
+                  children: <Widget>[
                     Container(
                       width: 60,
                       height: 60,
                       child: (_image != null)
-                        ? Image.file(
-                          _image,
-                          fit: BoxFit.cover,
-                        )
-                        : Image.asset(
-                          'images/noimage.png',
-                          fit: BoxFit.cover,
-                        ),
+                          ? Image.file(
+                              _image,
+                              fit: BoxFit.cover,
+                            )
+                          : Image.asset(
+                              'images/noimage.png',
+                              fit: BoxFit.cover,
+                            ),
                     ),
                     MaterialButton(
                       minWidth: 60,
@@ -149,9 +170,10 @@ class _CatalogPaletteState extends State<CatalogPalette> {
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
-                    isCollapsed : true,
+                    isCollapsed: true,
                     focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).cursorColor),
+                      borderSide:
+                          BorderSide(color: Theme.of(context).cursorColor),
                     ),
                     errorBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.red),
@@ -165,7 +187,7 @@ class _CatalogPaletteState extends State<CatalogPalette> {
                       fontSize: 16,
                     ),
                   ),
-                  onFieldSubmitted: (v){
+                  onFieldSubmitted: (v) {
                     FocusScope.of(context).requestFocus(_focus[catNote]);
                   },
                 ),
@@ -180,9 +202,10 @@ class _CatalogPaletteState extends State<CatalogPalette> {
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
-                    isCollapsed : true,
+                    isCollapsed: true,
                     focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Theme.of(context).cursorColor),
+                      borderSide:
+                          BorderSide(color: Theme.of(context).cursorColor),
                     ),
                     enabledBorder: UnderlineInputBorder(
                       borderSide: BorderSide(color: Colors.transparent),
@@ -193,7 +216,7 @@ class _CatalogPaletteState extends State<CatalogPalette> {
                       fontSize: 14,
                     ),
                   ),
-                  onFieldSubmitted: (v){
+                  onFieldSubmitted: (v) {
                     FocusScope.of(context).requestFocus(_focus[catPrice]);
                   },
                 ),
@@ -208,12 +231,13 @@ class _CatalogPaletteState extends State<CatalogPalette> {
                         color: Colors.white,
                       ),
                       focusNode: _focus[catPrice],
-                      textAlign : TextAlign.center,
+                      textAlign: TextAlign.center,
                       controller: _controller[catPrice],
-                      keyboardType: TextInputType.numberWithOptions(signed:false),
+                      keyboardType:
+                          TextInputType.numberWithOptions(signed: false),
                       textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
-                        isCollapsed : true,
+                        isCollapsed: true,
                         focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
                         ),
@@ -224,15 +248,15 @@ class _CatalogPaletteState extends State<CatalogPalette> {
                           borderSide: BorderSide(color: Colors.transparent),
                         ),
                         hintText: catalogs[catPrice][settingDetail],
-                        hintStyle:  TextStyle(
+                        hintStyle: TextStyle(
                           color: Colors.white,
                           fontSize: 14,
                         ),
                       ),
-                      inputFormatters: <TextInputFormatter> [
-                        WhitelistingTextInputFormatter.digitsOnly,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly,
                       ],
-                      onFieldSubmitted: (v){
+                      onFieldSubmitted: (v) {
                         FocusScope.of(context).requestFocus(_focus[catShop]);
                       },
                     ),
@@ -255,10 +279,18 @@ class _CatalogPaletteState extends State<CatalogPalette> {
                 onPressed: () async {
                   MenuDto _dto = MenuDto();
                   widget.id == null ? _dto.id = null : _dto.id = widget.id;
-                  _controller[catShop].text == '' ? _dto.shop = null : _dto.shop = _controller[catShop].text;
-                  _controller[catName].text == '' ? _dto.name = null : _dto.name = _controller[catName].text;
-                  _controller[catNote].text == '' ? _dto.note = '' : _dto.note = _controller[catNote].text;
-                  _controller[catPrice].text == '' ? _dto.price = null : _dto.price = int.parse(_controller[catPrice].text);
+                  _controller[catShop].text == ''
+                      ? _dto.shop = null
+                      : _dto.shop = _controller[catShop].text;
+                  _controller[catName].text == ''
+                      ? _dto.name = null
+                      : _dto.name = _controller[catName].text;
+                  _controller[catNote].text == ''
+                      ? _dto.note = ''
+                      : _dto.note = _controller[catNote].text;
+                  _controller[catPrice].text == ''
+                      ? _dto.price = null
+                      : _dto.price = int.parse(_controller[catPrice].text);
                   _image == null ? _dto.icon = null : _dto.icon = _image.path;
                   var _result = await setCatalog(_dto);
                   if (_result == 0) {
@@ -266,7 +298,7 @@ class _CatalogPaletteState extends State<CatalogPalette> {
                     Navigator.pop(_context);
                   } else {
                     setState(() {
-                      switch(_result) {
+                      switch (_result) {
                         case 1:
                           errorText = '*印の必須項目を入力してください';
                           break;
