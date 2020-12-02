@@ -24,7 +24,8 @@ Future getSettingByName(String _key, dynamic _value) async {
 }
 
 Future getSettingByIndex(int _index) async {
-  return await _getSetting(settings[_index][settingColumn], settings[_index][settingDefault]);
+  return await _getSetting(
+      settings[_index][settingColumn], settings[_index][settingDefault]);
 }
 
 // 設定値の更新
@@ -38,7 +39,12 @@ Future setSettingByName(String _key, dynamic _value) async {
 
 setSetting(BuildContext _context, ApplicationBloc _bloc, int _index) async {
   dynamic _setting = await getSettingByIndex(_index);
-  _result = await showSingleDialog(context: _context, title: settings[_index][settingTitle], value: _setting, initial: settings[_index][settingDefault]);
+  _result = await showSingleDialog(
+    context: _context,
+    title: settings[_index][settingTitle],
+    value: _setting,
+    initial: settings[_index][settingDefault],
+  );
   if (_result != null && _result != '') {
     await _pref.setValue(settings[_index][settingColumn], _result);
   }
@@ -46,7 +52,8 @@ setSetting(BuildContext _context, ApplicationBloc _bloc, int _index) async {
   settingNotification(_context, (_result == null || _result == ''));
 }
 
-setRangeSetting(BuildContext _context, ApplicationBloc _bloc, int _index) async {
+setRangeSetting(
+    BuildContext _context, ApplicationBloc _bloc, int _index) async {
   // 設定値
   int _value = await getSettingByIndex(_index);
 
@@ -57,17 +64,21 @@ setRangeSetting(BuildContext _context, ApplicationBloc _bloc, int _index) async 
   }
 
   // 最大値
-  int _maximum = 0;
+  int _maximum = 999999;
   if (settings[_index][settingMaximum] != 0) {
     _maximum = await getSettingByIndex(settings[_index][settingMaximum]);
   }
 
   print('editRangSetting: [min]:$_minimum [max]:$_maximum, [now]:$_value');
 
-  int _buffer = await showSingleDialog(context: _context, title: settings[_index][settingTitle], value: _value, initial: settings[_index][settingDefault]);
-  if (_buffer != null ) {
+  int _buffer = await showSingleDialog(
+      context: _context,
+      title: settings[_index][settingTitle],
+      value: _value,
+      initial: settings[_index][settingDefault]);
+  if (_buffer != null) {
     if (_minimum <= _buffer && _buffer <= _maximum) {
-      await _pref.setValue(settings[_index][settingColumn], _buffer.toString());
+      await _pref.setValue(settings[_index][settingColumn], _buffer);
     } else {
       _buffer = null;
     }
@@ -79,7 +90,10 @@ setRangeSetting(BuildContext _context, ApplicationBloc _bloc, int _index) async 
 Future setCatalog(MenuDto _dto) async {
   MenuDao _dao = MenuDao();
 
-  if (_dto.shop == null || _dto.name == null || _dto.note == null || _dto.price == null) {
+  if (_dto.shop == null ||
+      _dto.name == null ||
+      _dto.note == null ||
+      _dto.price == null) {
     return 1;
   }
 

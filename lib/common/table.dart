@@ -7,7 +7,8 @@ import 'package:lunch_wallet/util/table.dart';
 
 class ApplicationDatabase {
   ApplicationDatabase.privateConstructor();
-  static final ApplicationDatabase instance = ApplicationDatabase.privateConstructor();
+  static final ApplicationDatabase instance =
+      ApplicationDatabase.privateConstructor();
   static Database _database;
 
   Future<Database> get database async {
@@ -19,7 +20,8 @@ class ApplicationDatabase {
   _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, TableUtil.databaseName);
-    return await openDatabase(path,
+    return await openDatabase(
+      path,
       version: TableUtil.databaseVersion,
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,

@@ -15,7 +15,7 @@ _setNotification({
         Icons.error_outline,
         size: 28,
         color: Colors.red[300],
-        ),
+      ),
       duration: Duration(seconds: 2),
       leftBarIndicatorColor: Colors.red,
       forwardAnimationCurve: Curves.easeOutExpo,
@@ -29,7 +29,7 @@ _setNotification({
         Icons.info_outline,
         size: 28,
         color: Colors.blue[300],
-        ),
+      ),
       duration: Duration(seconds: 2),
       leftBarIndicatorColor: Colors.blue,
       forwardAnimationCurve: Curves.easeOutExpo,
@@ -38,7 +38,7 @@ _setNotification({
   }
 }
 
-// 
+//
 depositNotification(BuildContext _context, bool _iserror) {
   _setNotification(
     context: _context,
@@ -47,16 +47,16 @@ depositNotification(BuildContext _context, bool _iserror) {
   );
 }
 
-// 
+//
 receiptNotification(BuildContext _context, int _fee) {
   _setNotification(
     context: _context,
-    message: _fee == 0 ? '残高が足りませんでした' : '食費を支払いました',
+    message: _fee == 0 ? '残高が足りませんでした' : '支払いました',
     isError: (_fee == 0),
   );
 }
 
-// 
+//
 refundNotification(BuildContext _context, bool _iserror) {
   _setNotification(
     context: _context,
@@ -65,7 +65,7 @@ refundNotification(BuildContext _context, bool _iserror) {
   );
 }
 
-// 
+//
 correctNotification(BuildContext _context, int _value) {
   if (_value == 0) {
     _setNotification(
@@ -88,7 +88,7 @@ correctNotification(BuildContext _context, int _value) {
   }
 }
 
-// 
+//
 settingNotification(BuildContext _context, bool _iserror) {
   _setNotification(
     context: _context,
@@ -97,7 +97,7 @@ settingNotification(BuildContext _context, bool _iserror) {
   );
 }
 
-// 
+//
 catalogNotification(BuildContext _context) {
   _setNotification(
     context: _context,
