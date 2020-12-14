@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import 'package:lunch_wallet/common/bloc.dart';
 import 'package:lunch_wallet/common/data.dart';
 import 'package:lunch_wallet/util/resource.dart';
 
@@ -12,6 +14,14 @@ class ButtonConfig extends StatefulWidget {
 }
 
 class _ButtonConfigState extends State<ButtonConfig> {
+  ApplicationBloc _bloc;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _bloc = Provider.of<ApplicationBloc>(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -24,9 +34,9 @@ class _ButtonConfigState extends State<ButtonConfig> {
           setState(() {
             ApplicationData _data = ApplicationData();
             if (widget.index == hasimport) {
-              _data.importData();
+              _data.importData(context, _bloc);
             } else {
-              _data.exportData();
+              _data.exportData(context);
             }
           });
         },

@@ -1,24 +1,44 @@
 import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:path_provider_ex/path_provider_ex.dart';
 
+import 'package:lunch_wallet/common/bloc.dart';
 import 'package:lunch_wallet/common/preference.dart';
+import 'package:lunch_wallet/common/table.dart';
+import 'package:lunch_wallet/model/notification.dart';
 import 'package:lunch_wallet/util/resource.dart';
+import 'package:lunch_wallet/util/table.dart';
 
 class ApplicationData {
   Future<String> get _localPath async {
-    final directory = await getExternalStorageDirectory();
-    return directory.path;
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    return documentsDirectory.path;
+  }
+
+  Future<String> get _externalPath async {
+    List<StorageInfo> _storageInfo;
+    try {
+      _storageInfo = await PathProviderEx.getStorageInfo();
+    } on PlatformException {}
+
+    return _storageInfo.length > 1 ? _storageInfo[1].appFilesDir : null;
   }
 
   Future<File> get _localFile async {
-    final path = await _localPath;
-    return File('$path/lunch_wallet');
+    final _path = await _externalPath;
+    return _path == null ? null : File('$_path/lunch_wallet');
   }
 
-  Future<File> write(String _value) async {
-    final file = await _localFile;
-    var result = file.writeAsString('$_value', flush: true);
-    return result;
+  Future<bool> write(String _value) async {
+    try {
+      final file = await _localFile;
+      file.writeAsString('$_value', flush: true);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   Future<String> read() async {
@@ -31,8 +51,20 @@ class ApplicationData {
     }
   }
 
-  void exportData() async {
+  void exportData(BuildContext _context) async {
+    final ApplicationDatabase instance =
+        ApplicationDatabase.privateConstructor();
+    instance.database = null;
+
+    String _localpath = await _localPath;
+    File _file = File('$_localpath/${TableUtil.databaseName}');
+    String _externalpath = await _externalPath;
+    _file.copy('$_externalpath/${TableUtil.databaseName}');
+
+    await instance.database;
+
     final ApplicationPreference _pref = ApplicationPreference();
+    int _saving = await _pref.getValue('savings', 0);
     int _min = await _pref.getValue(
         settings[minFee][settingColumn], settings[minFee][settingDefault]);
     int _max = await _pref.getValue(
@@ -45,12 +77,27 @@ class ApplicationData {
     bool _isAuto = await _pref.getValue(
         settings[isAuto][settingColumn], settings[isAuto][settingDefault]);
 
-    write('$_min,$_max,$_nameFee,$_nameDeposit,$_isAuto');
+    bool _result =
+        await write('$_min,$_max,$_nameFee,$_nameDeposit,$_isAuto,$_saving');
+
+    exportNotification(_context, _result);
   }
 
-  importData() async {
+  importData(BuildContext _context, ApplicationBloc _bloc) async {
+    final ApplicationDatabase instance =
+        ApplicationDatabase.privateConstructor();
+    instance.database = null;
+
+    String _externalpath = await _externalPath;
+    File _file = File('$_externalpath/${TableUtil.databaseName}');
+    String _localpath = await _localPath;
+    _file.copy('$_localpath/${TableUtil.databaseName}');
+
+    await instance.database;
+
     String _buffer = await read();
     if (_buffer == null) {
+      importNotification(_context, false);
       return;
     }
     List<String> _array = _buffer.split(',');
@@ -75,5 +122,13 @@ class ApplicationData {
           ? await _pref.setValue(settings[isAuto][settingColumn], true)
           : await _pref.setValue(settings[isAuto][settingColumn], false);
     }
+    if (_array[5] != null && _array[5] != 'null') {
+      await _pref.setValue('savings', int.parse(_array[5]));
+    }
+
+    _bloc.deposit.add(int.parse(_array[5]));
+    _bloc.payment.add(0);
+
+    importNotification(_context, true);
   }
 }

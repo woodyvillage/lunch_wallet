@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flushbar/flushbar.dart';
 
-//
 _setNotification({
   @required BuildContext context,
   @required String message,
@@ -38,7 +37,6 @@ _setNotification({
   }
 }
 
-//
 depositNotification(BuildContext _context, bool _iserror) {
   _setNotification(
     context: _context,
@@ -47,7 +45,6 @@ depositNotification(BuildContext _context, bool _iserror) {
   );
 }
 
-//
 receiptNotification(BuildContext _context, int _fee) {
   _setNotification(
     context: _context,
@@ -56,7 +53,6 @@ receiptNotification(BuildContext _context, int _fee) {
   );
 }
 
-//
 refundNotification(BuildContext _context, bool _iserror) {
   _setNotification(
     context: _context,
@@ -65,7 +61,6 @@ refundNotification(BuildContext _context, bool _iserror) {
   );
 }
 
-//
 correctNotification(BuildContext _context, int _value) {
   if (_value == 0) {
     _setNotification(
@@ -88,7 +83,6 @@ correctNotification(BuildContext _context, int _value) {
   }
 }
 
-//
 settingNotification(BuildContext _context, bool _iserror) {
   _setNotification(
     context: _context,
@@ -97,11 +91,26 @@ settingNotification(BuildContext _context, bool _iserror) {
   );
 }
 
-//
 catalogNotification(BuildContext _context) {
   _setNotification(
     context: _context,
     message: 'メニューを追加しました',
     isError: false,
+  );
+}
+
+exportNotification(BuildContext _context, bool _iswrite) {
+  _setNotification(
+    context: _context,
+    message: _iswrite ? 'データを書き出しました' : 'SDカードが使用できません',
+    isError: !_iswrite,
+  );
+}
+
+importNotification(BuildContext _context, bool _isread) {
+  _setNotification(
+    context: _context,
+    message: _isread ? 'データを読み込みました' : 'SDカードが使用できません',
+    isError: !_isread,
   );
 }

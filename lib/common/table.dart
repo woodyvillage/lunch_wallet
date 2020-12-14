@@ -13,19 +13,28 @@ class ApplicationDatabase {
 
   Future<Database> get database async {
     if (_database != null) return _database;
-    _database = await _initDatabase();
+    _database = await _initialDatabase();
     return _database;
   }
 
-  _initDatabase() async {
-    Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, TableUtil.databaseName);
+  set database(dynamic _value) {
+    _finalDatabase(_value);
+  }
+
+  _initialDatabase() async {
+    Directory _documentsDirectory = await getApplicationDocumentsDirectory();
+    String path = join(_documentsDirectory.path, TableUtil.databaseName);
     return await openDatabase(
       path,
       version: TableUtil.databaseVersion,
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
     );
+  }
+
+  _finalDatabase(dynamic _value) {
+    _database.close();
+    _database = _value;
   }
 
   Future _onCreate(Database _db, int _version) async {
