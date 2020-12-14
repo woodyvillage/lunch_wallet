@@ -38,7 +38,7 @@ Widget circleAvatarItem({
 Widget titleItem({
   @required data,
 }) {
-  if (data.note == null) {
+  if (data.note == null || data.note == "") {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
