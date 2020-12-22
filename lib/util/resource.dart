@@ -96,6 +96,7 @@ final settings = [
   ['データ', '', '', '', true, null, null, null],
   ['読み込み', 'データを引き継ぐことができます', 'hasImport', null, false, null, null, null],
   ['書き出し', 'データを外部記憶装置に書き出します', 'hasExport', null, false, null, null, null],
+  ['バージョン', 'バージョン', '', '', true, null, null, null],
 ];
 final nameDeposit = 1;
 final isAuto = 3;

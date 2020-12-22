@@ -40,7 +40,8 @@ class _CatalogPaletteState extends State<CatalogPalette> {
   ];
   var errorText = '';
   BuildContext _context;
-  File _image;
+  PickedFile _image;
+  final ImagePicker _picker = ImagePicker();
 
   @override
   void didChangeDependencies() {
@@ -64,11 +65,13 @@ class _CatalogPaletteState extends State<CatalogPalette> {
     widget.price == null
         ? _controller[catPrice].text = ''
         : _controller[catPrice].text = widget.price.toString();
-    widget.icon == null ? _image = null : _image = File(widget.icon);
+    widget.icon == null ? _image = null : _image = PickedFile(widget.icon);
   }
 
   Future _insertImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    final image = await _picker.getImage(
+      source: ImageSource.gallery,
+    );
     setState(() {
       _image = image;
     });
@@ -143,7 +146,7 @@ class _CatalogPaletteState extends State<CatalogPalette> {
                       height: 60,
                       child: (_image != null)
                           ? Image.file(
-                              _image,
+                              File(_image.path),
                               fit: BoxFit.cover,
                             )
                           : Image.asset(
