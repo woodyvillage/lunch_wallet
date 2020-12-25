@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:lunch_wallet/common/advertisement.dart';
 import 'package:lunch_wallet/common/bloc.dart';
 import 'package:lunch_wallet/dto/payment.dart';
 import 'package:lunch_wallet/view/wallet/balancedetail.dart';
@@ -48,7 +49,14 @@ class _BalanceState extends State<Balance> {
           return ListView.builder(
             itemCount: snapshot.data.length,
             itemBuilder: (context, index) {
-              return Card(
+              return Column(
+                  children: [
+                    ApplicationAdvertisement().getBanner(
+                      width: MediaQuery.of(context).size.width,
+                      index: index,
+                      interval: 5,
+                    ),
+                    Card(
                 child: ListTile(
                   leading: circleAvatarItem(context: context, data: snapshot.data[index]),
                   title: titleItem(data: snapshot.data[index]),
@@ -70,6 +78,8 @@ class _BalanceState extends State<Balance> {
                     },
                   ),
                 ),
+                    ),
+                  ],
               );
             }
           );
