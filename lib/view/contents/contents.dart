@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hidden_drawer_menu/hidden_drawer_menu.dart';
+import 'package:provider/provider.dart';
 
+import 'package:lunch_wallet/common/purchase_notifier.dart';
 import 'package:lunch_wallet/util/resource.dart';
 import 'package:lunch_wallet/view/contents/button.dart';
 
@@ -15,7 +17,13 @@ class _ApplicationContentsState extends State<ApplicationContents> {
   @override
   void initState() {
     super.initState();
+    _buildHideDrawer();
+    setState(() {
+      context.read<PurchaseNotifier>().getPurchase();
+    });
+  }
 
+  void _buildHideDrawer() {
     for (List content in contents) {
       _menuitems.add(
         new ScreenHiddenDrawer(

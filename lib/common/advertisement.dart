@@ -1,11 +1,14 @@
 import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:admob_flutter/admob_flutter.dart';
+import 'package:flutter/material.dart';
+
+import 'package:lunch_wallet/util/resource.dart';
 
 class ApplicationAdvertisement {
   String _getBannerAdUnitId() {
     if (Platform.isAndroid) {
-      return 'ca-app-pub-2248232694488898/1757465882';
+      // return testCode;
+      return liveCode;
     } else if (Platform.isIOS) {
       return null;
     }
@@ -13,29 +16,34 @@ class ApplicationAdvertisement {
   }
 
   bool _isVisible(int _index, int _interval) {
-    if (_index == null || _interval == null) {
-      return true;
-    } else {
-      if (_index % _interval == 0) {
-        return true;
-      } else {
-        return false;
-      }
+    if (_getBannerAdUnitId() != liveCode) {
+      return false;
     }
+
+    return _index == null && _interval == null
+        ? true
+        : _index % _interval == 0
+            ? true
+            : false;
   }
 
   Widget getBanner({
     @required double width,
+    @required bool isInvalidAds,
     int index,
     int interval,
   }) {
     if (_isVisible(index, interval)) {
-      return AdmobBanner(
-        adUnitId: _getBannerAdUnitId(),
-        adSize: AdmobBannerSize.ADAPTIVE_BANNER(
-          width: width.toInt(),
-        ),
-      );
+      if (!isInvalidAds) {
+        return AdmobBanner(
+          adUnitId: _getBannerAdUnitId(),
+          adSize: AdmobBannerSize.ADAPTIVE_BANNER(
+            width: width.toInt(),
+          ),
+        );
+      } else {
+        return Container();
+      }
     } else {
       return Container();
     }

@@ -8,6 +8,15 @@ import 'package:lunch_wallet/view/wallet/body.dart';
 final applicationName = 'ランチウォレット';
 final walletPossession = 'ウォレット残高';
 final depositName = '入金額';
+final purchaseName = '購入';
+final purchaseApproval = 'この有料オプションを購入しますか？';
+
+// 広告関連
+final testCode = 'ca-app-pub-3940256099942544/6300978111';
+final liveCode = 'ca-app-pub-2248232694488898/1757465882';
+
+// 課金関連
+final purchaseCode = 'qrSIdqxHkKnqDZcAfqbiUgUBeqpWHyNO';
 
 // 要素定義
 final settingTitle = 0;
@@ -94,8 +103,10 @@ final settings = [
   ['最高金額', '自動支払機能での最高支払額', 'maxFee', 900, false, 5, 0, 3],
   ['明細名', null, 'nameFee', 'ランチ代', false, null, null, 3],
   ['データ', '', '', '', true, null, null, null],
-  ['読み込み', 'データを引き継ぐことができます', 'hasImport', null, false, null, null, null],
-  ['書き出し', 'データを外部記憶装置に書き出します', 'hasExport', null, false, null, null, null],
+  ['インポート', 'データを引き継ぐことができます', '読込', null, false, null, null, null],
+  ['エクスポート', 'データを外部記憶装置に書き出します', '保存', null, false, null, null, null],
+  ['有料オプション', '', '', '', true, null, null, null],
+  ['広告抑止', '画面上の広告を消すことができます', '購入', null, false, null, null, null],
   ['バージョン', 'バージョン', '', '', true, null, null, null],
 ];
 final nameDeposit = 1;
@@ -105,6 +116,7 @@ final maxFee = 6;
 final nameFee = 7;
 final hasimport = 9;
 final hasExport = 10;
+final noAds = 12;
 
 // pallet画面内に表示する項目
 final catalogs = [

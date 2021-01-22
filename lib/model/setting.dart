@@ -37,7 +37,8 @@ Future setSettingByName(String _key, dynamic _value) async {
   return await _setSetting(_key, _value);
 }
 
-setSetting(BuildContext _context, ApplicationBloc _bloc, int _index) async {
+Future<void> setSetting(
+    BuildContext _context, ApplicationBloc _bloc, int _index) async {
   dynamic _setting = await getSettingByIndex(_index);
   _result = await showSingleDialog(
     context: _context,
@@ -52,7 +53,7 @@ setSetting(BuildContext _context, ApplicationBloc _bloc, int _index) async {
   settingNotification(_context, (_result == null || _result == ''));
 }
 
-setRangeSetting(
+Future<void> setRangeSetting(
     BuildContext _context, ApplicationBloc _bloc, int _index) async {
   // 設定値
   int _value = await getSettingByIndex(_index);
@@ -69,7 +70,7 @@ setRangeSetting(
     _maximum = await getSettingByIndex(settings[_index][settingMaximum]);
   }
 
-  print('editRangSetting: [min]:$_minimum [max]:$_maximum, [now]:$_value');
+  print('editRangeSetting: [min]:$_minimum [max]:$_maximum, [now]:$_value');
 
   int _buffer = await showSingleDialog(
       context: _context,
@@ -119,6 +120,6 @@ Future setCatalog(MenuDto _dto) async {
   }
 }
 
-updSetting(int _index, dynamic _value) async {
+void updSetting(int _index, dynamic _value) async {
   await _pref.setValue(settings[_index][settingColumn], _value);
 }

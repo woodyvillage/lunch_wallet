@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:lunch_wallet/view/dialog/messagedialog.dart';
 import 'package:lunch_wallet/view/dialog/numberdialog.dart';
 import 'package:lunch_wallet/view/dialog/textdialog.dart';
 
@@ -19,6 +20,25 @@ Future showSingleDialog({
     // null：初期表示なし
     dialog = TextDialog(title: title, value: value);
   }
+  return showDialog(
+    context: context,
+    useRootNavigator: true,
+    builder: (BuildContext context) {
+      return builder == null ? dialog : builder(context, dialog);
+    },
+  );
+}
+
+// メッセージダイアログ表示
+Future showMessageDialog({
+  @required BuildContext context,
+  @required String title,
+  dynamic value,
+  bool cancel,
+  TransitionBuilder builder,
+}) {
+  Widget dialog;
+  dialog = MessageDialog(title: title, value: value, isCancel: cancel);
   return showDialog(
     context: context,
     useRootNavigator: true,

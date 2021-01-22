@@ -8,9 +8,6 @@ class ApplicationFrame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: applicationName,
-
       // 日本語のフォントが正しく表示される対応
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
@@ -19,21 +16,16 @@ class ApplicationFrame extends StatelessWidget {
       supportedLocales: [Locale('ja', 'JP')],
 
       // アプリケーションテーマ
-      theme: 
-        ThemeData(
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
       darkTheme: ThemeData.dark(),
 
+      // コンテンツ
+      debugShowCheckedModeBanner: false,
+      title: applicationName,
       home: ApplicationContents(),
-
-      // ルート情報を元に画面遷移先を定義
-      // initialRoute: '/',
-      // routes: {
-      //   '/': (context) => ApplicationContents(),
-      //   '/settings': (context) => Settings(),
-      // },
     );
   }
 }
